@@ -1,0 +1,10 @@
+write_to_file 1. ShortList_Rental.kml ['350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480', '350_480']
+{'ShortListed School Locations': 27, 'TrainStations': 219, 'Primary School Locations': 501, 'Secondary School Locations': 187, 'Rentals Available CSV': 240, '350_480': 240}
+write_to_file 1. TrainStations.kml ['TrainStations']
+{'ShortListed School Locations': 27, 'TrainStations': 219, 'Primary School Locations': 501, 'Secondary School Locations': 187, 'Rentals Available CSV': 240, '350_480': 240}
+write_to_file 1. All_Primary.kml ['Primary School Locations', 'Primary School Catchment Areas']
+{'ShortListed School Locations': 27, 'TrainStations': 219, 'Primary School Locations': 501, 'Secondary School Locations': 187, 'Rentals Available CSV': 240, '350_480': 240}
+write_to_file 1. ShortList_Rentals.csv ['Rentals Available CSV']
+{'ShortListed School Locations': 27, 'TrainStations': 219, 'Primary School Locations': 501, 'Secondary School Locations': 187, 'Rentals Available CSV': 240, '350_480': 240}
+write_to_file 1. ShortListed_Primary.kml ['ShortListed School Locations', 'ShortListed School Catchment Areas']
+{'ShortListed School Locations': 27, 'TrainStations': 219, 'Primary School Locations': 501, 'Secondary School Locations': 187, 'Rentals Available CSV': 240, '350_480': 240}
