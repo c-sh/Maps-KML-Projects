@@ -78,8 +78,13 @@ def rec_parse_types(kml_func, object):
 					object["boundRect"] = [(min(str_poly_lat), min(str_poly_lng) ), (max(str_poly_lat), max(str_poly_lng))]
 					
 				elif loopkey == "secondaryZone":
-					#do nothing
-					pass
+					for loop_dict in object[loopkey]:
+						str_poly_lat.append(loop_dict["lat"])
+						str_poly_lng.append(loop_dict["lng"])
+					#Create and add Bounding Rect to the citionary but do not plot it yet
+					#Bounding Rect bottom left, top right coordinates
+					object["boundRect"] = [(min(str_poly_lat), min(str_poly_lng) ), (max(str_poly_lat), max(str_poly_lng))]
+					# pass
 				elif loopkey == "name":
 					str_name = '<![CDATA[' + str(object[loopkey]) +  ']]>'
 				elif loopkey == "lat":
@@ -291,12 +296,14 @@ def within_sch_zone(lat, lng, tag):
 def parse_real_estate_data(kml_func, object, tag):
 	str_type = "Rentals Available " + tag["price_filter"]
 	loc_dict = {}
+	print "parse_real_estate_data - ", object
 	if isinstance(object, (list)):
 		for loop_item in object:
-#			print loop_item
+			print "List ", loop_item
 			parse_real_estate_data(kml_func, loop_item, tag)		
 	elif isinstance(object, (dict)):
 		keylist = object.keys()
+		print "keylist ", keylist
 		for loopkey in keylist:
 			if loopkey == "latitude":
 				str_lat = str(object[loopkey])
@@ -313,6 +320,8 @@ def parse_real_estate_data(kml_func, object, tag):
 				str_lng = str(object[loopkey])
 				loc_dict["lng"] = object[loopkey]
 			else: 
+				print "Dict parse_real_estate_data", object
+				print "Dict parse_real_estate_data", object[loopkey]
 				parse_real_estate_data(kml_func, object[loopkey], tag)
 
 		if set(['latitude', 'longitude', 'listingId']) == set(keylist):
@@ -399,19 +408,19 @@ if del_var == 1:
 	list_of_price_filters = [(350,480)]
 	str_list_of_price_filters = []
 #"filters":{"priceRange":{"minimum":"0","maximum":"225"}}
-	i = 50
+	i = 5
 	if debug == 0:
 		for sch_dict in list_of_sch_dicts:
 			if "Shortlist" in sch_dict.keys():
-				if sch_dict["Shortlist"] == "Y":					
+				if sch_dict["Shortlist"] == "Y":
 					tup1=sch_dict["boundRect"][0]
 					tup2=sch_dict["boundRect"][1]
-
+					print sch_dict
 					for price_tupl in list_of_price_filters:
 						price_url = "%22filters%22:{%22priceRange%22:{%22minimum%22:%22" + str(price_tupl[0]) + "%22,%22maximum%22:%22" + str(price_tupl[1]) + "%22}},"
 						rect_url = "%22boundingBoxSearch%22:[" + str(tup1[0]) + "," + str(tup1[1]) + "," + str(tup2[0]) + "," + str(tup2[1]) + "],"
 						loopURL = baseURL3 + price_url + rect_url + url_tail
-#						print loopURL
+						print "loopURL = ", loopURL
 #					break
 						page_loop = requests.get(loopURL)
 						text_loop = page_loop.text
@@ -419,9 +428,11 @@ if del_var == 1:
 						str_price_filter = str(price_tupl[0]) + "_" + str(price_tupl[1])
 						tag = { "school_name" : sch_dict["name"], "School Rank": sch_dict["School Rank"], "price_filter": str_price_filter, "School Zone": sch_dict["zone"], "list types":[]}
 #						tmp_str = "Rentals Available " + str_price_filter
+						print "Before parse_real_estate_data"
 						parse_real_estate_data(kmlX, loop_top_dict, tag)
-#						print "B.", tag["list types"]
+						print "After parse_real_estate_data"
 						str_list_of_price_filters.extend(tag["list types"])
+
 #						if tag["list types"] not in str_list_of_price_filters:
 #							str_list_of_price_filters.append(tag["list types"])
 						
@@ -437,7 +448,9 @@ if del_var == 1:
 #					"ShortList_Rentals.csv": ["Rentals Available CSV"]
 #				}
 	file_dict = {	"ShortListed_Primary.kml": ["ShortListed School Locations", "ShortListed School Catchment Areas"],
+					"ShortListed_Secondary.kml":["ShortListed School Locations", "ShortListed School Catchment Areas"],
 					"All_Primary.kml": ["Primary School Locations", "Primary School Catchment Areas"],
+					"All_Secondary.kml": ["Secondary School Locations", "Secondary School Catchment Areas"],
 					"ShortList_Rental.kml": str_list_of_price_filters,
 					"TrainStations.kml": ["TrainStations"],
 					"ShortList_Rentals.csv": ["Rentals Available CSV"]
